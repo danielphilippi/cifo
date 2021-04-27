@@ -72,6 +72,18 @@ def hill_climb(search_space, log=0):
 
 
 def sim_annealing(search_space, L, c, alpha=.95):
+    """Simulated annealing implementation.
+
+    Args:
+        search_space (Population): a Population object to search through.
+        L (int, optional): Internal loop parameter. Defaults to 20.
+        c (int, optional): Temperature parameter. Defaults to 10.
+        alpha (float, optional): Alpha to decrease the temperature. Defaults to 0.95.
+
+    Returns:
+        Individual: an Individual object - the best found by SA.
+    """
+    
     # Init
     start = choice(search_space)
     # let current solution equal starting point
