@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, sample
 
 
 def binary_mutation(individual):
@@ -17,3 +17,13 @@ def binary_mutation(individual):
         raise Exception(f'Trying to do binary mutation on individual {individual}. But it is not binary')
 
     return individual
+
+
+def swap_mutation(individual):
+    idx1, idx2 = sample([i for i in range(len(individual))], 2)
+    individual[idx1], individual[idx2] = individual[idx2], individual[idx1]
+
+    return individual
+
+
+
