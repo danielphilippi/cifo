@@ -2,8 +2,8 @@ from charles.charles import Population, Individual
 from copy import deepcopy
 from data.ks_data import values, weights, capacity
 from charles.selection import fps
-from charles.mutation import binary_mutation
-from charles.crossover import single_point_crossover
+from charles.mutation import binary_mutation, swap_mutation
+from charles.crossover import single_point_crossover, cycle_co
 from random import random
 from operator import attrgetter
 
@@ -57,15 +57,15 @@ for i in range(n_generations):
         parent1, parent2 = fps(pop), fps(pop)
         # crossover
         if random() < prob_co: # if rand(0,1) is smaller than prob_co
-            offspring1, offspring2 = single_point_crossover(parent1, parent2)
+            offspring1, offspring2 = cycle_co(parent1, parent2)
         else:
             offspring1, offspring2 = parent1, parent2
 
         # mutation
         if random() < prob_m:
-            offspring1 = binary_mutation(offspring1)
+            offspring1 = swap_mutation(offspring1)
         if random() < prob_m:
-            offspring2 = binary_mutation(offspring2)
+            offspring2 = swap_mutation(offspring2)
 
         new_pop.append(Individual(representation=offspring1))
         new_pop.append(Individual(representation=offspring2))
