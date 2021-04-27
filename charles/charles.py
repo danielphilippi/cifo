@@ -1,11 +1,12 @@
-from random import shuffle, choice, sample
+from random import shuffle, choice, sample, random
+from operator import  attrgetter
 
 
 class Individual:
     def __init__(
         self,
         representation=None,
-        size=10,
+        size=None,
         replacement=True,
         valid_set=[i for i in range(13)],
     ):
@@ -34,7 +35,7 @@ class Individual:
         self.representation[position] = value
 
     def __repr__(self):
-        return f"Individual(Size: {len(self.representation)}; Fitness: {self.fitness})"
+        return f"Individual(size={len(self.representation)}); Fitness: {self.fitness}"
 
 
 class Population:
@@ -50,6 +51,30 @@ class Population:
                     valid_set=kwargs["valid_set"],
                 )
             )
+    def evolve(self, gens, select, crossover, mutate, co_p, mu_p, elitism):
+        for gen in range(gens):
+            new_pop = []
+            while len(new_pop) < self.size:
+                parent1, parent2 = select(self), select(self)
+                # Crossover
+                if random() < co_p:
+                    offspring1, offspring2 = crossover(parent1, parent2)
+                else:
+                    offspring1, offspring2 = parent1, parent2
+                # Mutation
+                if random() < mu_p:
+                    offspring1 = mutate(offspring1)
+                if random() < mu_p:
+                    offspring2 = mutate(offspring2)
+
+                new_pop.append(Individual(representation=offspring1))
+                if len(new_pop) < self.size:
+                    new_pop.append(Individual(representation=offspring2))
+            if elitism == True:
+                raise NotImplementedError
+
+            self.individuals = new_pop
+            print(f'Best Individual: {max(self, key=attrgetter("fitness"))}')
 
     def __len__(self):
         return len(self.individuals)

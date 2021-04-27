@@ -1,16 +1,13 @@
 from charles.charles import Population, Individual
+from charles.search import hill_climb, sim_annealing
 from copy import deepcopy
-from data.ks_data import values, weights, capacity
+from data.ks_data import weights, values, capacity
 from charles.selection import fps
-from charles.mutation import binary_mutation, swap_mutation
-from charles.crossover import single_point_crossover, cycle_co
+from charles.mutation import binary_mutation
+from charles.crossover import single_point_co
 from random import random
-from operator import attrgetter
+from operator import  attrgetter
 
-"""
-why pop?
-
-"""
 def evaluate(self):
     fitness = 0
     weight = 0
@@ -19,8 +16,7 @@ def evaluate(self):
             fitness += values[bit]
             weight += weights[bit]
     if weight > capacity:
-        fitness = capacity - weight
-
+        fitness = capacity-weight
     return fitness
 
 
@@ -37,37 +33,20 @@ def get_neighbours(self):
     return n
 
 
+# Monkey Patching
 Individual.evaluate = evaluate
 Individual.get_neighbours = get_neighbours
 
-# look up init from Population...
 pop = Population(
-    size=20, optim='max', sol_size=len(values), valid_set=[0,1], replacement=True
+    size=20, optim="max", sol_size=len(values), valid_set=[0, 1], replacement=True
 )
 
-#hill_climb(pop, log=1)
-#sim_annealing(pop, L=20, c=100)
-
-n_generations = 100
-prob_co = 0.5
-prob_m = 0.5
-for i in range(n_generations):
-    new_pop = []
-    while len(new_pop) < len(pop):
-        parent1, parent2 = fps(pop), fps(pop)
-        # crossover
-        if random() < prob_co: # if rand(0,1) is smaller than prob_co
-            offspring1, offspring2 = cycle_co(parent1, parent2)
-        else:
-            offspring1, offspring2 = parent1, parent2
-
-        # mutation
-        if random() < prob_m:
-            offspring1 = swap_mutation(offspring1)
-        if random() < prob_m:
-            offspring2 = swap_mutation(offspring2)
-
-        new_pop.append(Individual(representation=offspring1))
-        new_pop.append(Individual(representation=offspring2))
-    pop.individuals = new_pop
-    print(f'Best indiv: {max(pop, key=attrgetter("fitness"))}')
+pop.evolve(
+    gens=100, 
+    select= fps,
+    crossover= single_point_co,
+    mutate=binary_mutation,
+    co_p=0.7,
+    mu_p=0.2,
+    elitism=False,
+)
