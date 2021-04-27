@@ -1,10 +1,10 @@
 from matplotlib import pyplot as plt
 
-
 def plot_c(c, alpha, threshold):
-    c_list = [c]
+    p = [c]
     while c > threshold:
-        c = c * alpha
-        c_list.append(c)
-    plt.plot(c_list)
+        c = c*alpha
+        p.append(c)
+    plt.plot(p)
     plt.show()
+    
