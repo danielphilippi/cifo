@@ -1,11 +1,28 @@
 from random import randint, sample
 
+def template_mutation(individual):
+    """[summary]
+
+    Args:
+        individual ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    return individual
+
 
 def binary_mutation(individual):
-    """
-    Bin mutation for GA individual
-    :param individual: A GA ind from the charles lib
-    :return: Mutated Individual
+    """Binary muation for a GA individual
+
+    Args:
+        individual (Individual): A GA individual from charles libray.py
+
+    Raises:
+        Exception: When individual is not binary encoded.py
+
+    Returns:
+        Individual: Mutated Individual
     """
     mut_point = randint(0, len(individual) - 1)
 
