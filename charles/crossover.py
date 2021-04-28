@@ -1,4 +1,4 @@
-from random import randint, sample
+from random import randint, sample, shuffle
 
 
 def template_co(p1, p2):
@@ -58,5 +58,32 @@ def cycle_co(p1, p2):
             offspring2[pos] = val2
 
     return offspring1, offspring2
+
+
+def arithmetic_co(p1, p2):
+    # init offspring with None
+    offspring1 = [None for _ in range(len(p1))]
+    offspring2 = offspring1.copy()
+
+    # set alpha val within [0,1]
+    a = 0.4
+
+    #
+    # use loop to be prepared to exec operation on a subset of parents only
+    for i in range(len(p1)):
+        offspring1[i] = a * p1[i] + (1 - a) * p2[i]
+        offspring2[i] = (1 - a) * p1[i] + a * p2[i]
+
+
+if __name__ == '__main__':
+    p1 = list(range(10))
+    shuffle(p1)
+    p2 = list(range(10))
+    shuffle(p2)
+
+    res = arithmetic_co(p1, p2)
+    res
+
+
 
 

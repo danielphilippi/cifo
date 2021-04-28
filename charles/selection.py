@@ -1,4 +1,6 @@
-from random import uniform
+from random import uniform, sample
+from operator import attrgetter
+
 
 def fps(population):
     """Fitness proportionate selection implementation.
@@ -19,3 +21,12 @@ def fps(population):
         position += individual.fitness
         if position > spin:
             return individual
+
+
+def tournament(population, size=20):
+    participants = sample(population.individuals, size)
+    if population.optim == 'max':
+        return max(participants, key=attrgetter('fitness'))
+    elif population.optim == 'min':
+        return min(participants, key=attrgetter('fitness'))
+

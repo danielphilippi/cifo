@@ -42,5 +42,22 @@ def swap_mutation(individual):
 
     return individual
 
+def inversion_mutation(individual):
+    """
 
+    :param individual:
+    :return: inplace modification of individual
+    """
+    i = individual #.copy()
+    # find mutation upper and lower fence and sort it
+    mut_points = sample(range(len(i)), 2)
+    mut_points.sort()
+    i[mut_points[0]:mut_points[1]] = i[mut_points[0]:mut_points[1]][::-1]
+    return i
+
+
+if __name__ == '__main__':
+    ind = list(range(10))
+    res = inversion_mutation(ind)
+    res
 
