@@ -1,6 +1,5 @@
 from random import shuffle, choice, sample, random
 from operator import  attrgetter
-from copy import deepcopy
 
 
 class Individual:
@@ -25,6 +24,9 @@ class Individual:
 
     def get_neighbours(self, func, **kwargs):
         raise Exception("You need to monkey patch the neighbourhood function.")
+
+    def index(self, value):
+        return self.representation.index(value)
 
     def __len__(self):
         return len(self.representation)
@@ -55,13 +57,13 @@ class Population:
     def evolve(self, gens, select, crossover, mutate, co_p, mu_p, elitism):
         for gen in range(gens):
             new_pop = []
-
+ 
             if elitism == True:
-                if self.optim == 'max':
-                    elite = deepcopy(min(self.individuals, key=attrgetter('fitness')))
-                elif self.optim == 'max':
-                    elite = deepcopy(max(self.individuals, key=attrgetter('fitness')))
-
+                if self.optim == "max":
+                    elite = deepcopy(max(self.individuals, key=attrgetter("fitness")))
+                elif self.optim == "min":
+                    elite = deepcopy(min(self.individuals, key=attrgetter("fitness")))
+ 
             while len(new_pop) < self.size:
                 parent1, parent2 = select(self), select(self)
                 # Crossover
@@ -74,26 +76,24 @@ class Population:
                     offspring1 = mutate(offspring1)
                 if random() < mu_p:
                     offspring2 = mutate(offspring2)
-
+ 
                 new_pop.append(Individual(representation=offspring1))
                 if len(new_pop) < self.size:
                     new_pop.append(Individual(representation=offspring2))
-
+ 
             if elitism == True:
-                if self.optim == 'max':
-                    least = min(new_pop, key=attrgetter('fitness'))
-                elif self.optim == 'max':
-                    least = max(new_pop, key=attrgetter('fitness'))
-
-                # drop the one with the worse fitness and replace with elite
+                if self.optim == "max":
+                    least = min(new_pop, key=attrgetter("fitness"))
+                elif self.optim == "min":
+                    least = max(new_pop, key=attrgetter("fitness"))
                 new_pop.pop(new_pop.index(least))
                 new_pop.append(elite)
-
+ 
             self.individuals = new_pop
-
-            if self.optim == 'max':
+ 
+            if self.optim == "max":
                 print(f'Best Individual: {max(self, key=attrgetter("fitness"))}')
-            elif self.optim == 'min':
+            elif self.optim == "min":
                 print(f'Best Individual: {min(self, key=attrgetter("fitness"))}')
 
     def __len__(self):
