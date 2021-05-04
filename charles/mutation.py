@@ -31,33 +31,36 @@ def binary_mutation(individual):
     elif individual[mut_point] == 1:
         individual[mut_point] = 0
     else:
-        raise Exception(f'Trying to do binary mutation on individual {individual}. But it is not binary')
+        raise Exception(
+            f"Trying to do binary mutation on {individual}. But it's not binary."
+        )
 
     return individual
 
 
 def swap_mutation(individual):
-    idx1, idx2 = sample([i for i in range(len(individual))], 2)
-    individual[idx1], individual[idx2] = individual[idx2], individual[idx1]
+    # Get two mutation points
+    mut_points = sample(range(len(individual)), 2)
+    # Rename to shorten variable name
+    i = individual
 
-    return individual
+    i[mut_points[0]], i[mut_points[1]] = i[mut_points[1]], i[mut_points[0]]
 
-def inversion_mutation(individual):
-    """
-
-    :param individual:
-    :return: inplace modification of individual
-    """
-    i = individual #.copy()
-    # find mutation upper and lower fence and sort it
-    mut_points = sample(range(len(i)), 2)
-    mut_points.sort()
-    i[mut_points[0]:mut_points[1]] = i[mut_points[0]:mut_points[1]][::-1]
     return i
 
+def inversion_mutation(individual):
+    i = individual
+    # Position of the start and end of substring
+    mut_points = sample(range(len(i)), 2)
+    # This method assumes that the second point is after (on the right of) the first one
+    # Sort the list
+    mut_points.sort()
+    # Invert for the mutation
+    i[mut_points[0]:mut_points[1]] = i[mut_points[0]:mut_points[1]][::-1]
 
+    return i
+    
 if __name__ == '__main__':
-    ind = list(range(10))
-    res = inversion_mutation(ind)
-    res
+    i1 = [1,2,3,4,5,6]
 
+    print(inversion_mutation(i1))

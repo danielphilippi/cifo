@@ -1,7 +1,6 @@
 from random import uniform, sample
 from operator import attrgetter
 
-
 def fps(population):
     """Fitness proportionate selection implementation.
 
@@ -11,17 +10,23 @@ def fps(population):
     Returns:
         Individual: selected individual.
     """
-    # Sum total fitnesses
-    total_fitness = sum([i.fitness for i in population])
-    # Get a 'position' on the wheel
-    spin = uniform(0, total_fitness)
-    position = 0
-    # Find individual in the position of the spin
-    for individual in population:
-        position += individual.fitness
-        if position > spin:
-            return individual
 
+    if population.optim == "max":
+        # Sum total fitnesses
+        total_fitness = sum([i.fitness for i in population])
+        # Get a 'position' on the wheel
+        spin = uniform(0, total_fitness)
+        position = 0
+        # Find individual in the position of the spin
+        for individual in population:
+            position += individual.fitness
+            if position > spin:
+                return individual
+    elif population.optim == "min":
+        raise NotImplementedError
+
+    else:
+        raise Exception("No optimiziation specified (min or max).")
 
 def tournament(population, size=20):
     participants = sample(population.individuals, size)
@@ -29,4 +34,5 @@ def tournament(population, size=20):
         return max(participants, key=attrgetter('fitness'))
     elif population.optim == 'min':
         return min(participants, key=attrgetter('fitness'))
-
+    else:
+        raise Exception("No optimiziation specified (min or max).")

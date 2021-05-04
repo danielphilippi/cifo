@@ -21,7 +21,7 @@ def hill_climb(search_space, log=0):
     # Counter to ensure we don't loop
     # infinitely if stuck in a plateu of optimas
     iter_plateu = 0
-    
+
     if log == 1:
         print(f"Initial position: {start}")
 
@@ -66,12 +66,12 @@ def hill_climb(search_space, log=0):
             else:
                 print(f"Best solution found: {position}")
                 return position
-        
+
         else:
             raise Exception("Problem doesn't specify if minimization or maximization.")
 
 
-def sim_annealing(search_space, L, c, alpha=.95):
+def sim_annealing(search_space, L=20, c=10, alpha=0.95):
     """Simulated annealing implementation.
 
     Args:
@@ -83,36 +83,29 @@ def sim_annealing(search_space, L, c, alpha=.95):
     Returns:
         Individual: an Individual object - the best found by SA.
     """
-    
-    # Init
+    # Select random solution from search space
     start = choice(search_space)
-    # let current solution equal starting point
+    # Let current solution be equal to random solution
     position = start
-    elite = position
-    # Init L and C
+    # Initialize parameters L and c
     L, c = L, c
-    # while repeat until term cond
+    # Repeat (loop)
     while c > 0.05:
-        # repeat L times
+    # Do L times
         for _ in range(L):
-            # generate neighbor
-            # here we first generate all possible neigbors and than make a choice
-            # ToDo: pass size arg to get_neigbours()
+            # Generate solution from N(i)
             sol = choice(position.get_neighbours())
-            # if neigh is better or equal take
+            # if new sol is better or equal - take it
             if sol.fitness >= position.fitness:
                 position = sol
-                if position.fitness >= elite.fitness:
-                    elite = position
-            # elif some weired fct, take if met
+            # else, if solution is worse take it based on P
             else:
                 p = uniform(0,1)
                 pc = exp(-abs(sol.fitness - position.fitness)/c)
                 if p < pc:
                     position = sol
-                pass
-        # Update c and L
+        # Update c
         c = c * alpha
-    print(f'Sim returned: {position}')
-    print(f'Best solution found: {elite}')
+    # return solution with best fitness
+    print(f"Best solution found: {position}")
     return position

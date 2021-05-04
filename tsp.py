@@ -1,6 +1,10 @@
 from charles.charles import Population, Individual
 from charles.search import hill_climb, sim_annealing
+from charles.selection import fps, tournament
+from charles.mutation import swap_mutation
+from charles.crossover import cycle_co
 from data.tsp_data import distance_matrix
+from random import choices
 from copy import deepcopy
 
 
@@ -44,7 +48,7 @@ Individual.get_neighbours = get_neighbours
 
 
 pop = Population(
-    size=20,
+    size=100,
     sol_size=len(distance_matrix[0]),
     valid_set=[i for i in range(len(distance_matrix[0]))],
     replacement=False,
@@ -75,3 +79,12 @@ One point Crossover
 - Offspring2: vise verca
 
 """
+pop.evolve(
+    gens=100, 
+    select= tournament,
+    crossover= cycle_co,
+    mutate=swap_mutation,
+    co_p=0.8,
+    mu_p=0.5,
+    elitism=False
+)

@@ -2,7 +2,7 @@ from charles.charles import Population, Individual
 from charles.search import hill_climb, sim_annealing
 from copy import deepcopy
 from data.ks_data import weights, values, capacity
-from charles.selection import fps
+from charles.selection import fps, tournament
 from charles.mutation import binary_mutation
 from charles.crossover import single_point_co
 from random import random
@@ -38,15 +38,15 @@ Individual.evaluate = evaluate
 Individual.get_neighbours = get_neighbours
 
 pop = Population(
-    size=20, optim="max", sol_size=len(values), valid_set=[0, 1], replacement=True
+    size=100, optim="max", sol_size=len(values), valid_set=[0, 1], replacement=True
 )
 
 pop.evolve(
     gens=100, 
-    select= fps,
+    select= tournament,
     crossover= single_point_co,
     mutate=binary_mutation,
     co_p=0.7,
     mu_p=0.2,
-    elitism=False,
+    elitism=False
 )
